@@ -9,13 +9,14 @@
 # Copyright:   (c) Jeremy Nelson 2014
 # Licence:     MIT
 #-------------------------------------------------------------------------------
+import json
 import unittest
 from models import *
 
 class TestAgent(unittest.TestCase):
 
     def setUp(self):
-        self.agent = Agent()
+        self.agent = Agent(label="Agent")
 
     def test_init(self):
         self.assert_(isinstance(self.agent, Agent))
@@ -28,6 +29,33 @@ class TestAgent(unittest.TestCase):
         self.assert_(hasattr(self.agent, 'identifier'))
         self.assert_(hasattr(self.agent, 'label'))
         self.assert_(hasattr(self.agent, 'relatedTo'))
+
+    def test_to_dict(self):
+        self.assertItemsEqual(self.agent.as_dict(),
+                          {u'hasAuthority': None,
+                           u'authorityAssigner': None,
+                           'identifiers': {},
+                           'label': 'Agent',
+                           u'relatedTo': None,
+                           u'authoritySource': None,
+                           u'identifier': None,
+                           u'authorizedAccessPoint': None})
+        self.assertItemsEqual(self.agent.as_dict(show_null=False),
+                          {'identifiers': {},
+                           'label': 'Agent'})
+
+    def test_to_json(self):
+        self.assertEquals(json.loads(self.agent.as_json()),
+                          json.loads("""{
+                            "authorityAssigner": null,
+                            "authoritySource": null,
+                            "authorizedAccessPoint": null,
+                            "hasAuthority": null,
+                            "identifier": null,
+                            "identifiers": {},
+                            "label": "Agent",
+                            "relatedTo": null}"""))
+
 
     def tearDown(self):
         pass

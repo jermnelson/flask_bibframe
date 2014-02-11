@@ -12,6 +12,8 @@
 
 import json
 import sys
+
+from types import MethodType
 from rdflib import Graph, URIRef
 
 BIBFRAME_RDF = None
@@ -33,17 +35,27 @@ class BibframeEntity(object):
             if hasattr(self, key):
                 setattr(self, key, kwargs.get(key))
 
-    def as_json(self):
-        "Returns the entity's BIBFRAME properties in JSON-LD"
-        output = self.identifiers
+    def as_dict(self, show_null=True):
+        "Returns the entity's BIBFRAMe properties as a Python dictionary"
+        output = {}#self.identifiers
         for name in dir(self):
-            if not name.startswith("_"):
+            if not name.startswith("_") and not name.startswith("semantic_stores"):
                 rdf_property = getattr(self, name)
-                if type(rdf_property) == instancemethod:
+                if type(rdf_property) == MethodType:
+                    continue
+                elif not show_null and rdf_property is None:
                     continue
                 else:
                     output[name] = rdf_property
-        print(output)
+        return output
+
+    def as_json(self, with_namespace=False):
+        "Returns the entity's BIBFRAME properties in JSON-LD"
+        output = self.as_dict()
+        if with_namespace:
+            for key in output.keys():
+                value = output.pop(key)
+                output['bf:{}'.format(key)] = value
         return json.dumps(output, indent=2, sort_keys=True)
 
 
