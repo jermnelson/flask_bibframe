@@ -39,9 +39,11 @@ class BibframeEntity(object):
         for name in dir(self):
             if not name.startswith("_"):
                 rdf_property = getattr(self, name)
-                if rdf_property is None:
+                if type(rdf_property) == instancemethod:
                     continue
-                output[name] = rdf_property
+                else:
+                    output[name] = rdf_property
+        print(output)
         return json.dumps(output, indent=2, sort_keys=True)
 
 
