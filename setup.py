@@ -11,10 +11,8 @@ __version__ = '.'.join(__version_info__)
 
 from setuptools import find_packages, setup
 
-
-
 setup(
-    name='Flask-FedoraCommons',
+    name='Flask-BIBFRAME',
     version=__version__,
     url='http://github.com/jermnelson/flask_bibframe',
     license='MIT License',
