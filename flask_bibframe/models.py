@@ -11,6 +11,7 @@
 #-------------------------------------------------------------------------------
 
 import json
+import re
 import sys
 
 from types import MethodType
@@ -22,6 +23,8 @@ CLASS_URI = URIRef(u'http://www.w3.org/2000/01/rdf-schema#Class')
 DOMAIN_URI = URIRef(u'http://www.w3.org/2000/01/rdf-schema#domain')
 SUBCLASS_URI = URIRef(u'http://www.w3.org/2000/01/rdf-schema#subClassOf')
 
+MODEL_TYPE_RE = re.compile(r"models.(\w+)")
+
 class BibframeEntity(object):
     """BibframeEntity is a the base class for Flask-BIBFRAME Python Classes used
     in Flask applications"""
@@ -30,6 +33,10 @@ class BibframeEntity(object):
         "Initializes an instance and sets parameters for the instance"
         self.identifiers = kwargs.get('identifiers', {})
         self.semantic_stores = kwargs.get('semantic_stores', [])
+        if MODEL_TYPE_RE.search(str(self.__class__)):
+            model_type = MODEL_TYPE_RE.search(str(self.__class__)).groups()[0]
+            setattr('@type', model_type)
+
         # Populates RDF properties
         for key in kwargs.keys():
             if hasattr(self, key):
