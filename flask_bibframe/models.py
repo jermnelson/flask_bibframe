@@ -35,7 +35,7 @@ class BibframeEntity(object):
         self.semantic_stores = kwargs.get('semantic_stores', [])
         if MODEL_TYPE_RE.search(str(self.__class__)):
             model_type = MODEL_TYPE_RE.search(str(self.__class__)).groups()[0]
-            setattr('@type', model_type)
+            setattr(self, '@type', model_type)
 
         # Populates RDF properties
         for key in kwargs.keys():

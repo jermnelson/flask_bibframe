@@ -32,7 +32,8 @@ class TestAgent(unittest.TestCase):
 
     def test_to_dict(self):
         self.assertItemsEqual(self.agent.as_dict(),
-                          {u'hasAuthority': None,
+                          {u'@type': 'Agent',
+                           u'hasAuthority': None,
                            u'authorityAssigner': None,
                            'identifiers': {},
                            'label': 'Agent',
@@ -42,11 +43,13 @@ class TestAgent(unittest.TestCase):
                            u'authorizedAccessPoint': None})
         self.assertItemsEqual(self.agent.as_dict(show_null=False),
                           {'identifiers': {},
-                           'label': 'Agent'})
+                           'label': 'Agent',
+                           '@type': 'Agent'})
 
     def test_to_json(self):
         self.assertEquals(json.loads(self.agent.as_json()),
                           json.loads("""{
+                            "@type": "Agent",
                             "authorityAssigner": null,
                             "authoritySource": null,
                             "authorizedAccessPoint": null,
@@ -56,6 +59,8 @@ class TestAgent(unittest.TestCase):
                             "label": "Agent",
                             "relatedTo": null}"""))
 
+    def test_type(self):
+        self.assertEquals(getattr(self.agent, '@type'), 'Agent')
 
     def tearDown(self):
         pass
@@ -79,6 +84,9 @@ class TestAnnotation(unittest.TestCase):
         self.assert_(hasattr(self.annotation, 'identifier'))
         self.assert_(hasattr(self.annotation, 'label'))
         self.assert_(hasattr(self.annotation, 'relatedTo'))
+
+    def test_type(self):
+        self.assertEquals(getattr(self.annotation, '@type'), 'Annotation')
 
     def tearDown(self):
         pass
